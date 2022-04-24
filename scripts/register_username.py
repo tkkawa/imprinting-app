@@ -1,9 +1,7 @@
 import argparse
 import sqlite3
 
-from logging import getLogger, config
-
-from config import DB_PATH, CONF_PATH
+from config import DB_PATH
 
 
 class Username:
@@ -15,6 +13,10 @@ class Username:
             db_path(str): path to the git_slack.db
             new_data(tuple): user information, (slack_user_id, github_username)
         """
+        assert type(db_path) == str, "The type of db_path should be string"
+        assert type(new_data[0]) == str, "The type of user_id should be string"
+        assert type(new_data[1]) == str, "The type of user should be string"
+        
         with sqlite3.connect(db_path) as con:
             cursor = con.cursor()
             cursor.execute(
@@ -43,9 +45,10 @@ class Username:
                     (new_data[0], new_data[1])
                 )
                 con.commit()
-                logger.info('The username has been registered in the database.')
+                print('The username has been registered in the database.')
             else:
-                logger.warning('The username is already registered in the database.')
+                con.rollback()
+                print('The username is already registered in the database.')
 
 
 if __name__ == '__main__':
@@ -56,6 +59,5 @@ if __name__ == '__main__':
     new_data = (args.param1, args.param2)
 
     db_path = DB_PATH.format(DB_NAME="imprinting.db")
-    logger = getLogger(__name__)
 
     Username.insert_username(db_path, new_data) 

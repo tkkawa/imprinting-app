@@ -1,15 +1,15 @@
 module.exports = (robot) ->
-  robot.respond /username (.*)/i, (msg)->	
+  robot.respond /start/i, (msg)->	
     slack_user = msg.message.user.id;
-    username = msg.match[1]
+    mode = "start"
 
     {PythonShell} = require('python-shell');
 
-    execute_path = './scripts/register_username.py'
+    execute_path = './scripts/register_attendance_and_leaving.py'
     options = {
       args:[
-        '-param1', slack_user
-        '-param2', username
+        '-param1', slack_user,
+        '-param2', mode
       ]
     };
 

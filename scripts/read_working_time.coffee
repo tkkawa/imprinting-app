@@ -1,15 +1,15 @@
 module.exports = (robot) ->
-  robot.respond /username (.*)/i, (msg)->	
-    slack_user = msg.message.user.id;
-    username = msg.match[1]
+  robot.respond /log (.*) (.*)/i, (msg)->	
+    target_user = msg.match[1]
+    date = msg.match[2]
 
     {PythonShell} = require('python-shell');
 
-    execute_path = './scripts/register_username.py'
+    execute_path = './scripts/read_working_time.py'
     options = {
       args:[
-        '-param1', slack_user
-        '-param2', username
+        '-param1', target_user,
+        '-param2', date
       ]
     };
 
